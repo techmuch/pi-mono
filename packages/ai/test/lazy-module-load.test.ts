@@ -63,7 +63,9 @@ function runProbe(action: string): ProbeResult {
 	return JSON.parse(lastLine) as ProbeResult;
 }
 
-describe("lazy provider module loading", () => {
+const nodeMajor = parseInt(process.versions.node.split(".")[0], 10);
+
+describe.skipIf(nodeMajor < 23)("lazy provider module loading", () => {
 	it("does not load provider SDKs when importing the root barrel", () => {
 		const result = runProbe("");
 		expect(result.loadedSpecifiers).toEqual([]);
