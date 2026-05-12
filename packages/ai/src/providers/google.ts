@@ -327,8 +327,18 @@ function createClient(
 		httpOptions.headers = { ...model.headers, ...optionsHeaders };
 	}
 
+	const isOAuthToken = apiKey?.startsWith("ya29.");
+	if (isOAuthToken) {
+		httpOptions.headers = {
+			...httpOptions.headers,
+			Authorization: `Bearer ${apiKey}`,
+		};
+	}
+
 	return new GoogleGenAI({
-		apiKey,
+		// Pass the oauth token itself as the API key to bypass ADC resolution.
+		// The Authorization Bearer header takes precedence at the API layer.
+		apiKey: isOAuthToken ? apiKey : apiKey,
 		httpOptions: Object.keys(httpOptions).length > 0 ? httpOptions : undefined,
 	});
 }

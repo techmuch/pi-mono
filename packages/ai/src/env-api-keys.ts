@@ -98,11 +98,13 @@ function getApiKeyEnvVars(provider: string): readonly string[] | undefined {
 		return ["ANTHROPIC_OAUTH_TOKEN", "ANTHROPIC_API_KEY"];
 	}
 
+	// GOOGLE_OAUTH_TOKEN takes precedence over GEMINI_API_KEY
+	if (provider === "google") {
+		return ["GOOGLE_OAUTH_TOKEN", "GEMINI_API_KEY"];
+	}
+
 	const envMap: Record<string, string> = {
 		openai: "OPENAI_API_KEY",
-		"azure-openai-responses": "AZURE_OPENAI_API_KEY",
-		deepseek: "DEEPSEEK_API_KEY",
-		google: "GEMINI_API_KEY",
 		"google-vertex": "GOOGLE_CLOUD_API_KEY",
 		groq: "GROQ_API_KEY",
 		cerebras: "CEREBRAS_API_KEY",
